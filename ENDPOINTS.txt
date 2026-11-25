@@ -1,0 +1,62 @@
+ENDPOINTS DE LA API - REGISTRO E INICIO DE SESION
+Evidencia: GA7-220501096-AA5-EV02 - API
+Aprendiz: Andrés Cárdenas - Ficha 3186668
+Repositorio: https://github.com/AndresCardenas10/ANDRESCARDENAS_AA5_EV02
+
+URL base: http://localhost:3000
+Formato: JSON (encabezado Content-Type: application/json)
+Todas las respuestas tienen la forma: { "exito": true|false, "mensaje": "..." }
+
+======================================================================
+1) GET /
+======================================================================
+Descripcion: comprueba que el servicio esta activo.
+URL completa: http://localhost:3000/
+Cuerpo: no lleva.
+Respuesta:
+  200 OK -> { "exito": true, "mensaje": "Servicio web de registro e inicio de sesion activo",
+              "endpoints": ["POST /api/register", "POST /api/login"] }
+
+======================================================================
+2) POST /api/register
+======================================================================
+Descripcion: registra un usuario nuevo. La contrasena se guarda cifrada (hash bcrypt).
+URL completa: http://localhost:3000/api/register
+Cuerpo (JSON):
+  {
+    "usuario": "cliente01",
+    "contrasena": "Clave123"
+  }
+Reglas: usuario de 1 a 50 caracteres; contrasena de al menos 6 caracteres.
+Respuestas:
+  201 Created     -> { "exito": true,  "mensaje": "Usuario registrado correctamente" }
+  409 Conflict    -> { "exito": false, "mensaje": "El usuario ya existe" }
+  400 Bad Request -> { "exito": false, "mensaje": "Debe enviar usuario y contrasena" }
+  400 Bad Request -> { "exito": false, "mensaje": "La contrasena debe tener al menos 6 caracteres" }
+  400 Bad Request -> { "exito": false, "mensaje": "El usuario no puede superar los 50 caracteres" }
+  500 Error       -> { "exito": false, "mensaje": "Error interno del servidor" }
+
+======================================================================
+3) POST /api/login
+======================================================================
+Descripcion: valida usuario y contrasena (inicio de sesion).
+URL completa: http://localhost:3000/api/login
+Cuerpo (JSON):
+  {
+    "usuario": "cliente01",
+    "contrasena": "Clave123"
+  }
+Respuestas:
+  200 OK           -> { "exito": true,  "mensaje": "Autenticación satisfactoria" }
+  401 Unauthorized -> { "exito": false, "mensaje": "Error en la autenticación" }
+                      (usuario inexistente o contrasena incorrecta: mismo mensaje por seguridad)
+  400 Bad Request  -> { "exito": false, "mensaje": "Error en la autenticación: debe enviar usuario y contrasena" }
+  500 Error        -> { "exito": false, "mensaje": "Error interno del servidor" }
+
+======================================================================
+Respuestas generales
+======================================================================
+  400 Bad Request -> { "exito": false, "mensaje": "El cuerpo de la peticion no es un JSON valido" }
+  404 Not Found   -> { "exito": false, "mensaje": "Ruta no encontrada" }
+
+Coleccion de Postman con las 10 pruebas: pruebas/AA5_EV02.postman_collection.json
