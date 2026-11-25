@@ -1,0 +1,499 @@
+{
+  "info": {
+    "name": "AA5-EV02 - API registro e inicio de sesion",
+    "description": "Pruebas de la API de la evidencia GA7-220501096-AA5-EV01 (registro e inicio de sesion). Ejecutar en orden, con la tabla usuarios vacia. Aprendiz: Andres Cardenas - Ficha 3186668.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Estado del servicio (GET /)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Codigo de estado 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"exito = true\", function () {",
+              "  pm.expect(pm.response.json().exito).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": []
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 - Registro correcto",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Codigo de estado 201\", function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"exito = true\", function () {",
+              "  pm.expect(pm.response.json().exito).to.eql(true);",
+              "});",
+              "pm.test(\"Mensaje: Usuario registrado correctamente\", function () {",
+              "  pm.expect(pm.response.json().mensaje).to.eql(\"Usuario registrado correctamente\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuario\": \"{{usuario}}\",\n  \"contrasena\": \"{{contrasena}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 - Registro de usuario repetido",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Codigo de estado 409\", function () {",
+              "  pm.response.to.have.status(409);",
+              "});",
+              "pm.test(\"exito = false\", function () {",
+              "  pm.expect(pm.response.json().exito).to.eql(false);",
+              "});",
+              "pm.test(\"Mensaje: El usuario ya existe\", function () {",
+              "  pm.expect(pm.response.json().mensaje).to.eql(\"El usuario ya existe\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuario\": \"{{usuario}}\",\n  \"contrasena\": \"{{contrasena}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 - Registro con contrasena corta",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Codigo de estado 400\", function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "pm.test(\"exito = false\", function () {",
+              "  pm.expect(pm.response.json().exito).to.eql(false);",
+              "});",
+              "pm.test(\"Mensaje: La contrasena debe tener al menos 6 caracteres\", function () {",
+              "  pm.expect(pm.response.json().mensaje).to.eql(\"La contrasena debe tener al menos 6 caracteres\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuario\": \"cliente02\",\n  \"contrasena\": \"123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 - Registro sin contrasena",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Codigo de estado 400\", function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "pm.test(\"exito = false\", function () {",
+              "  pm.expect(pm.response.json().exito).to.eql(false);",
+              "});",
+              "pm.test(\"Mensaje: Debe enviar usuario y contrasena\", function () {",
+              "  pm.expect(pm.response.json().mensaje).to.eql(\"Debe enviar usuario y contrasena\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuario\": \"cliente03\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 - Login correcto",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Codigo de estado 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"exito = true\", function () {",
+              "  pm.expect(pm.response.json().exito).to.eql(true);",
+              "});",
+              "pm.test(\"Mensaje: Autenticación satisfactoria\", function () {",
+              "  pm.expect(pm.response.json().mensaje).to.eql(\"Autenticación satisfactoria\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuario\": \"{{usuario}}\",\n  \"contrasena\": \"{{contrasena}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07 - Login con contrasena incorrecta",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Codigo de estado 401\", function () {",
+              "  pm.response.to.have.status(401);",
+              "});",
+              "pm.test(\"exito = false\", function () {",
+              "  pm.expect(pm.response.json().exito).to.eql(false);",
+              "});",
+              "pm.test(\"Mensaje: Error en la autenticación\", function () {",
+              "  pm.expect(pm.response.json().mensaje).to.eql(\"Error en la autenticación\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuario\": \"{{usuario}}\",\n  \"contrasena\": \"Incorrecta99\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 - Login con usuario inexistente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Codigo de estado 401\", function () {",
+              "  pm.response.to.have.status(401);",
+              "});",
+              "pm.test(\"exito = false\", function () {",
+              "  pm.expect(pm.response.json().exito).to.eql(false);",
+              "});",
+              "pm.test(\"Mensaje: Error en la autenticación\", function () {",
+              "  pm.expect(pm.response.json().mensaje).to.eql(\"Error en la autenticación\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuario\": \"noexiste\",\n  \"contrasena\": \"{{contrasena}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09 - Login con JSON mal escrito",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Codigo de estado 400\", function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "pm.test(\"exito = false\", function () {",
+              "  pm.expect(pm.response.json().exito).to.eql(false);",
+              "});",
+              "pm.test(\"Mensaje: El cuerpo de la peticion no es un JSON valido\", function () {",
+              "  pm.expect(pm.response.json().mensaje).to.eql(\"El cuerpo de la peticion no es un JSON valido\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuario\": \"cliente01\",\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10 - Ruta inexistente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Codigo de estado 404\", function () {",
+              "  pm.response.to.have.status(404);",
+              "});",
+              "pm.test(\"exito = false\", function () {",
+              "  pm.expect(pm.response.json().exito).to.eql(false);",
+              "});",
+              "pm.test(\"Mensaje: Ruta no encontrada\", function () {",
+              "  pm.expect(pm.response.json().mensaje).to.eql(\"Ruta no encontrada\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/no-existe",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "no-existe"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "usuario",
+      "value": "cliente01"
+    },
+    {
+      "key": "contrasena",
+      "value": "Clave123"
+    }
+  ]
+}
